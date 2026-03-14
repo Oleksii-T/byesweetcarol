@@ -58,9 +58,13 @@
             @endif
         </div>
     @endadmin
-    
+
+    <x-header />
 
     @yield('content')
+
+    <x-footer />
+
     @yield('popups')
 </body>
 
