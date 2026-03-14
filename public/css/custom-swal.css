@@ -1,0 +1,47 @@
+/* swal toast style */
+body.swal2-toast-shown .swal2-container {
+    width: auto !important;
+    max-width: 500px !important;
+    min-width: 300px;
+}
+.post-price-quotation-popup {
+    max-width: 90% !important;
+    width: 800px;
+}
+.post-price-quotation-popup textarea {
+    height: 12em !important;
+}
+.swal2-popup.swal2-toast {
+    background-color: #28282826 !important;
+    border: 1px solid #505050;
+    border-radius: 8px;
+    color: white;
+    backdrop-filter: blur(9px);
+
+}
+div:where(.swal2-container) div:where(.swal2-timer-progress-bar) {
+    background: #6842fe !important;
+}
+
+/* swal modal style */
+div:where(.swal2-container) div:where(.swal2-popup) {
+    background-color: #28282826 !important;
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    border-radius: 8px !important;
+    border: 1px solid #505050 !important;
+    color: white !important;
+}
+.swal2-success-circular-line-left, .swal2-success-circular-line-right {
+    background-color: transparent !important;
+}
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+    background-color: #6842fe !important;
+    border-radius: 14px !important;
+}
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
+    border-radius: 8px !important;
+}
+.swal2-html-container {
+    white-space: pre-line;
+}
