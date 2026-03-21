@@ -20,8 +20,8 @@
     # RewriteRule ^ %1 [L,R=301]
 
     # Redirect To Trailing Slashes If Not A Folder Or A File...
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)([^/])$ https://%{HTTP_HOST}/$1$2/ [L,R=301]
+    # RewriteCond %{REQUEST_FILENAME} !-f
+    # RewriteRule ^(.*)([^/])$ https://%{HTTP_HOST}/$1$2/ [L,R=301]
 
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
