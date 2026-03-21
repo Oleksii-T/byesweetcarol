@@ -4,11 +4,8 @@
     <div class="page">
       <section class="hero" aria-label="Introduction">
         <h1 class="hero-title">
-          <span class="primary">Fresh game news for players across PC, PlayStation, Xbox, and Switch.</span>
-          <span class="muted">
-            Daily coverage on launches, patches, studio moves, showcases, and hardware updates.
-            Top stories below.
-          </span>
+          <span class="primary">{{ $page->show('hero:title') }}</span>
+          <span class="muted">{{ $page->show('hero:subtitle') }}</span>
         </h1>
       </section>
 
@@ -85,7 +82,7 @@
         </section>
 
         <aside class="recognition" aria-label="Trending topics">
-          <h2 class="section-label">Trending Topics</h2>
+          <h2 class="section-label">{{ $page->show('hero:trending-label') }}</h2>
           <div class="award-list">
             @foreach ($topTags->slice(4)->take(12) as $tag)
               <a class="award-badge" href="{{ route('categories.show', ['category' => $newsCategory->slug, 'tag' => $tag->slug]) }}">
@@ -97,7 +94,9 @@
       </main>
 
       <div class="all-news-link-wrap">
-        <a class="all-news-link" href="{{ route('categories.show', $newsCategory) }}">All Game News &rsaquo;</a>
+        <a class="all-news-link" href="{{ route('categories.show', $newsCategory) }}">
+          {{ $page->show('hero:all-news-cta') }} &rsaquo;
+        </a>
       </div>
     </div>
 @endsection

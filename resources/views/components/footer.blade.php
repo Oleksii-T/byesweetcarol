@@ -6,5 +6,5 @@
     <a class="footer-link" href="{{ route('terms') }}">Terms of Service</a>
     <a class="footer-link" href="{{ route('cookiePolicy') }}">Cookie Policy</a>
     </nav>
-    <p class="footer-copy">&copy; {{date('Y')}} BSCNews</p>
+    <p class="footer-copy">&copy; {{ date('Y') }} {{ $footer?->show('site-name', 'BSCNews') }}</p>
 </footer>
