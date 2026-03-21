@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Category;
 use App\Models\PageBlock;
+use App\Models\Tag;
+
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
@@ -70,6 +72,13 @@ class AppServiceProvider extends ServiceProvider
 
             $footer = Cache::remember('footer', 60 * 10, fn () => PageBlock::whereRelation('page', 'link', '/')->where('name', 'footer')->first());
             $view->with('footer', $footer);
+
+            $view->with(
+                'topTags',
+                Cache::remember('topTags', $cashTime, function () {
+                    return Tag::withCount('posts')->orderByDesc('posts_count')->limit(20)->get();
+                })
+            );
         });
 
         \Blade::directive('admin', function ($arguments) {

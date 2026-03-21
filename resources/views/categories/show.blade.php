@@ -8,7 +8,32 @@
 @endif
 
 @section('content')
-    <main>
-        Category Page
-    </main>
+    <div class="page">
+        <div class="cat-header">
+            <h1 class="cat-title">{{ $game ? "Latest News on $game->name" : $category->name }}</h1>
+        </div>
+
+        {{-- Tag filters --}}
+        @if ($topTags->isNotEmpty())
+            <nav class="tag-filter-row" aria-label="Filter by topic">
+                <a class="tag-filter{{ !request()->tag ? ' active' : '' }}"
+                   href="{{ $category->paginationLink(1, []) }}">All</a>
+                @foreach ($topTags->take(15) as $tag)
+                    <a class="tag-filter{{ request()->tag == $tag->slug ? ' active' : '' }}"
+                       href="{{ route('categories.show', ['category' => $category->slug, 'tag' => $tag->slug]) }}">
+                        {{ $tag->name }}
+                    </a>
+                @endforeach
+            </nav>
+        @endif
+
+        {{-- Posts grid --}}
+        <div class="posts-grid pagination-content" id="posts-container">
+            @include('components.post-cards-with-pages', [
+                'posts' => $posts,
+                'model' => $category,
+                'includeQueryParams' => ['game', 'tag', 'search'],
+            ])
+        </div>
+    </div>
 @endsection
