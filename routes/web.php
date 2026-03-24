@@ -53,6 +53,7 @@ Route::get('about-us', [PageController::class, 'aboutUs'])->name('about-us');
 Route::get('privacy-policy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('terms-of-service', [PageController::class, 'terms'])->name('terms');
 Route::get('cookie-policy', [PageController::class, 'cookiePolicy'])->name('cookiePolicy');
+Route::get('review-policy', [PageController::class, 'reviewPolicy'])->name('reviewPolicy');
 Route::get('{page}', [PageController::class, 'show'])->where('page', \App\Models\Page::getAllSlugs());
 
 Route::get('{category}/{page?}', [CategoryController::class, 'show'])->name('categories.show')->where('category', \App\Models\Category::getAllSlugs());

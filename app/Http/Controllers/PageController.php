@@ -131,4 +131,12 @@ class PageController extends Controller
 
         return view('page-with-blocks', compact('page', 'blocks'));
     }
+
+    public function reviewPolicy()
+    {
+        $page = Page::get('review-policy');
+        $blocks = $page->blocks->sortBy('order');
+
+        return view('page-with-blocks', compact('page', 'blocks'));
+    }
 }
