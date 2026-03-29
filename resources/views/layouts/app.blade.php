@@ -17,6 +17,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:image:width" content="1500">
     <meta property="og:image:height" content="844">
+    <meta name="google-site-verification" content="FzFoQ7NMeiR9L5ivlCfFfi-GjLrAaFKrr7dCu3QDIEw" />
     @yield('meta')
     <link rel="canonical" href="@yield('meta-canonical', 'https://localhost.com' . request()->getRequestUri())">
     <link rel="shortcut icon" href="{{asset('images/icons/favicon.png')}}" type="image/x-icon">
