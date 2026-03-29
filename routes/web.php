@@ -56,7 +56,9 @@ Route::get('cookie-policy', [PageController::class, 'cookiePolicy'])->name('cook
 Route::get('review-policy', [PageController::class, 'reviewPolicy'])->name('reviewPolicy');
 Route::get('{page}', [PageController::class, 'show'])->where('page', \App\Models\Page::getAllSlugs());
 
-Route::get('{category}/{page?}', [CategoryController::class, 'show'])->name('categories.show')->where('category', \App\Models\Category::getAllSlugs());
+Route::get('{category}/{page?}', [CategoryController::class, 'show'])->name('categories.show')->where('category', \App\Models\Category::getAllSlugs())->where('page', 'page-\d+');
+
+Route::get('{category}/{tagSlug}/{page?}', [CategoryController::class, 'show'])->name('categories.show.tag')->where('category', \App\Models\Category::getAllSlugs())->where('page', 'page-\d+');
 
 Route::get('{author}', [AuthorController::class, 'show'])->name('authors.show')->where('author', \App\Models\Author::getAllSlugs());
 

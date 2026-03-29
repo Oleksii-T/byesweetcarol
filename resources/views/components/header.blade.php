@@ -9,8 +9,8 @@
             </a>
         @endforeach
         @foreach ($topTags->take(4) as $tag)
-            <a class="chip chip--ghost{{ request()->get('tag') == $tag->slug ? ' active' : '' }}"
-               href="{{ route('categories.show', ['category' => 'news', 'tag' => $tag->slug]) }}">
+            <a class="chip chip--ghost{{ request()->route('tagSlug') == $tag->slug ? ' active' : '' }}"
+               href="{{ route('categories.show.tag', ['category' => 'news', 'tagSlug' => $tag->slug]) }}">
                 {{ $tag->name }}
             </a>
         @endforeach

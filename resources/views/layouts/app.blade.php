@@ -2,6 +2,9 @@
 <html lang="en" dir="ltr">
 
 <head>
+    @if (!isset($page))
+        dd(request());
+    @endif
     <title>@yield('title', $page?->meta_title)</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

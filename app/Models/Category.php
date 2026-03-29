@@ -44,7 +44,13 @@ class Category extends Model
 
     public function paginationLink($page, $includeQueryParams = [])
     {
+        $tagSlug = request()->route('tagSlug');
+
         $routeData = ['category' => $this];
+
+        if ($tagSlug) {
+            $routeData['tagSlug'] = $tagSlug;
+        }
 
         if ($page != 1) {
             $routeData['page'] = "page-$page";
@@ -56,7 +62,7 @@ class Category extends Model
             }
         }
 
-        return route('categories.show', $routeData);
+        return route($tagSlug ? 'categories.show.tag' : 'categories.show', $routeData);
     }
 
     public static function forHeader()
