@@ -13,7 +13,7 @@ class CategoryController extends Controller
     {
         $perPage = 10;
         $page = abs((int) filter_var($page, FILTER_SANITIZE_NUMBER_INT));
-        $posts = $category->posts()
+        $posts = $category->posts() 
             ->publised()
             ->latest('published_at')
             ->when($request->search, fn ($q, $v) => $q->where('title', 'like', "%$v%"))

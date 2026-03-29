@@ -61,8 +61,9 @@ class PageController extends Controller
     {
         if (! $request->ajax()) {
             $page = Page::get('contact');
+            $blocks = $page->blocks->sortBy('order');
 
-            return view('contact-us', compact('page'));
+            return view('contact-us', compact('page', 'blocks'));
         }
 
         $input = $request->validate([

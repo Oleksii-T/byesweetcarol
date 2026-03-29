@@ -47,6 +47,20 @@ class PageBlockSeeder extends Seeder
                     ],
                 ],
             ],
+            'contact' => [
+                'form' => [
+                    'cta' => [
+                        'type'  => 'text',
+                        'value' => 'Send Message',
+                    ],
+                ],
+                'side' => [
+                    'content' => [
+                        'type'  => 'editor',
+                        'value' => 'todo',
+                    ],
+                ],
+            ],
         ];
 
         foreach ($schemas as $pageLink => $blocks) {

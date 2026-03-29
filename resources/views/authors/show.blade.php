@@ -22,9 +22,6 @@
                 @if ($author->title)
                     <p class="author-bio__role">{{ $author->title }}</p>
                 @endif
-                @if ($author->description_small)
-                    <p class="author-bio__desc">{{ $author->description_small }}</p>
-                @endif
             </div>
         </div>
 
