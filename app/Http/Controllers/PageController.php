@@ -37,7 +37,7 @@ class PageController extends Controller
             : collect();
 
         $col2Posts = $col2Tag
-            ? (clone $newsQ)->whereRelation('tags', 'slug', $col2Tag->slug)->limit(3)->get()
+            ? (clone $newsQ)->whereRelation('tags', 'slug', $col2Tag->slug)->whereNotIn('id', $col1Posts->pluck('id'))->limit(3)->get()
             : collect();
 
         // Column 3: latest news not already shown in col1 or col2
