@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\GetTopTagsAction;
 use App\Enums\FeedbackStatus;
 use App\Enums\PageStatus;
+use App\Enums\PostStatus;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Feedback;
@@ -22,10 +24,7 @@ class PageController extends Controller
         $newsCategory = Category::where('slug', 'news')->firstOrFail();
 
         // Pick top 2 tags by post count (news category only)
-        $topNewsTags = Tag::withCount(['posts' => fn ($q) => $q->whereRelation('category', 'slug', 'news')])
-            ->orderByDesc('posts_count')
-            ->limit(2)
-            ->get();
+        $topNewsTags = GetTopTagsAction::run();
 
         $col1Tag = $topNewsTags->get(0);
         $col2Tag = $topNewsTags->get(1);
