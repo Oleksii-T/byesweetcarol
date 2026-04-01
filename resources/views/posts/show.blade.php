@@ -72,7 +72,7 @@
                 @if ($post->tags->isNotEmpty())
                     <div class="post-tags">
                         @foreach ($post->tags as $tag)
-                            <a class="post-tag" href="{{ route('categories.show', ['category' => $category->slug, 'tagSlug' => $tag->slug]) }}">
+                            <a class="post-tag" href="{{ route('categories.show.tag', ['category' => $category->slug, 'tagSlug' => $tag->slug]) }}">
                                 {{ $tag->name }}
                             </a>
                         @endforeach

@@ -85,7 +85,7 @@
           <h2 class="section-label">{{ $page->show('hero:trending-label') }}</h2>
           <div class="award-list">
             @foreach ($topTags->slice(4)->take(12) as $tag)
-              <a class="award-badge" href="{{ route('categories.show', ['category' => $newsCategory->slug, 'tagSlug' => $tag->slug]) }}">
+              <a class="award-badge" href="{{ route('categories.show.tag', ['category' => $newsCategory->slug, 'tagSlug' => $tag->slug]) }}">
                 {{ $tag->name }}
               </a>
             @endforeach
