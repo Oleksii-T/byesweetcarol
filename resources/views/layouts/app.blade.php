@@ -14,7 +14,7 @@
     <meta property="og:description" content="@yield('description', $page?->meta_description)">
     <meta name="description" content="@yield('description', $page?->meta_description)">
     <meta name="robots" content="@yield('meta-robots', 'index, follow, max-image-preview:large')">
-    <meta property="og:url" content="https://localhost.com{{request()->getRequestUri()}}">
+    <meta property="og:url" content="https://www.byesweetcarol.com{{request()->getRequestUri()}}">
     <meta property="og:site_name" content="RCGameClub">
     <meta property="og:type" content="@yield('meta-type', 'website')">
     <meta property="og:locale" content="en_US">
@@ -22,7 +22,7 @@
     <meta property="og:image:height" content="844">
     <meta name="google-site-verification" content="FzFoQ7NMeiR9L5ivlCfFfi-GjLrAaFKrr7dCu3QDIEw" />
     @yield('meta')
-    <link rel="canonical" href="@yield('meta-canonical', 'https://localhost.com' . request()->getRequestUri())">
+    <link rel="canonical" href="@yield('meta-canonical', 'https://www.byesweetcarol.com' . request()->getRequestUri())">
     <link rel="shortcut icon" href="{{asset('images/icons/favicon.png')}}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{asset('images/icons/favicon.png')}}">
     <link rel="apple-touch-icon" sizes="72x72" href="{{asset('images/icons/favicon.png')}}">
