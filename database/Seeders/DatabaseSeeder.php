@@ -19,11 +19,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PageSeeder::class,
             CategorySeeder::class,
-            GameSeeder::class,
-            TagSeeder::class,
             AuthorSeeder::class,
-            BlockSeeder::class,
-            PostSeeder::class,
         ]);
     }
 }
