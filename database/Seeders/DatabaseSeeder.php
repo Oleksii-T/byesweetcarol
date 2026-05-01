@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             PageSeeder::class,
+            PageBlockSeeder::class,
             CategorySeeder::class,
             AuthorSeeder::class,
         ]);
