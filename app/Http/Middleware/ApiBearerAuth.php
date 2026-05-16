@@ -18,6 +18,7 @@ class ApiBearerAuth
         $bearerToken = $request->bearerToken();
 
         if ($bearerToken !== config('auth.api_bearer')) {
+            \Log::info('dump', ['token-input:' => $bearerToken, 'token-config'=>config('auth.api_bearer')]);
             abort(403, 'Unauthorized');
         }
 
