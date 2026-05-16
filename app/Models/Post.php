@@ -45,6 +45,7 @@ class Post extends Model
         'tc_style',
         'related',
         'block_groups',
+        'external_data',
         'published_at',
     ];
 
@@ -54,6 +55,7 @@ class Post extends Model
         'block_groups' => 'array',
         'status' => PostStatus::class,
         'tc_style' => PostTCStyle::class,
+        'external_data' => 'array',
     ];
 
     const ATTACHMENTS = [
