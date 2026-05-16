@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://rc-club-game.com/sitemap.xml
