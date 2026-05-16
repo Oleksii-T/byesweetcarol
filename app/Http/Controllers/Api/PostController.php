@@ -65,6 +65,7 @@ class PostController extends Controller
 
         return response()->json([
             'source_id' => $data['id'] ?? null,
+            'post_id' => $post->id,
             'post_url' => route('admin.posts.edit', $post),
         ]);
     }
