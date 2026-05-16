@@ -71,8 +71,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(PostUpdateRequest $request, Post $post)
+    public function update(PostUpdateRequest $request, int $id)
     {
+        $post = Post::findOrFail($id);
         $data = $request->validated();
         $data = $this->normalizeExternalData($data);
         $blocks = $this->makeBlocks($data['blocks'] ?? $data['body']);
