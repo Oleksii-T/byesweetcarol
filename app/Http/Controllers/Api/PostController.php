@@ -7,6 +7,7 @@ use App\Enums\PostStatus;
 use App\Enums\PostTCStyle;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PostCreateRequest;
+use App\Http\Requests\Api\PostUpdateRequest;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Post;
@@ -16,12 +17,12 @@ class PostController extends Controller
 {
     public function __construct(
         protected PostService $service,
-    ) {
-    }
+    ) {}
 
     public function store(PostCreateRequest $request)
     {
         $data = $request->validated();
+        $data = $this->normalizeExternalData($data);
         $toPublish = $data['publish'] ?? false;
         $useAuthor = $data['author'] ?? 'random';
 
@@ -68,6 +69,48 @@ class PostController extends Controller
             'post_id' => $post->id,
             'post_url' => route('admin.posts.edit', $post),
         ]);
+    }
+
+    public function update(PostUpdateRequest $request, Post $post)
+    {
+        $data = $request->validated();
+        $data = $this->normalizeExternalData($data);
+        $blocks = $this->makeBlocks($data['blocks'] ?? $data['body']);
+
+        $post = \DB::transaction(function () use ($post, $data, $blocks) {
+            $post->update(collect($data)
+                ->only([
+                    'title',
+                    'meta_title',
+                    'meta_description',
+                    'external_data',
+                ])
+                ->toArray());
+
+            if (array_key_exists('tags', $data)) {
+                $post->tags()->detach();
+                $this->service->attachTags($post, $data['tags']);
+            }
+
+            SaveContentBlocks::run($post, $blocks);
+
+            return $post;
+        });
+
+        return response()->json([
+            'source_id' => $data['id'] ?? null,
+            'post_id' => $post->id,
+            'post_url' => route('admin.posts.edit', $post),
+        ]);
+    }
+
+    private function normalizeExternalData(array $data): array
+    {
+        if (isset($data['external_data']) && is_string($data['external_data'])) {
+            $data['external_data'] = json_decode($data['external_data'], true);
+        }
+
+        return $data;
     }
 
     private function makeBlocks(string $data): array
