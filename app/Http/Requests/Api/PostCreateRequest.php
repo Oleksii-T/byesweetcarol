@@ -49,7 +49,7 @@ class PostCreateRequest extends FormRequest
             'source' => ['nullable', 'string'],
             'publish' => ['nullable', 'boolean'],
             'author' => ['nullable', 'string'],
-            'external_data' => ['nullable', 'array'],
+            'external_data' => ['nullable', 'json'],
         ];
     }
 
