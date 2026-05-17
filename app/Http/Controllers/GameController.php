@@ -34,18 +34,24 @@ class GameController extends Controller
         if (! $request->ajax()) {
             $page = Page::get('{game}');
             $review = $game->posts()->publised()->whereRelation('category', 'slug', 'reviews')->latest('published_at')->first();
+            $screenshots = $game->screenshots()->limit(4)->get();
             $hasMoreGuides = $guides->hasMorePages();
             $hasMoreTopLists = $topLists->hasMorePages();
             $newsCategory = Category::where('slug', 'news')->first();
-            $news = Post::query()
-                ->where('category_id', $newsCategory->id)
-                ->where('game_id', $game->id)
-                ->publised()
-                ->latest('published_at')
-                ->paginate($perPage);
-            $hasMoreNewsLink = $news->hasMorePages() ? route('categories.show', ['category' => $newsCategory, 'game' => $game->slug]) : null;
+            $news = collect();
+            $hasMoreNewsLink = null;
 
-            return view('games.show', compact('page', 'game', 'review', 'guides', 'topLists', 'hasMoreGuides', 'hasMoreTopLists', 'news', 'hasMoreNewsLink'));
+            if ($newsCategory) {
+                $news = Post::query()
+                    ->where('category_id', $newsCategory->id)
+                    ->where('game_id', $game->id)
+                    ->publised()
+                    ->latest('published_at')
+                    ->paginate($perPage);
+                $hasMoreNewsLink = $news->hasMorePages() ? route('categories.show', ['category' => $newsCategory, 'game' => $game->slug]) : null;
+            }
+
+            return view('games.show', compact('page', 'game', 'review', 'guides', 'topLists', 'hasMoreGuides', 'hasMoreTopLists', 'news', 'hasMoreNewsLink', 'screenshots'));
         }
 
         if ($request->type == 'guides') {

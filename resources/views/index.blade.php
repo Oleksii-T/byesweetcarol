@@ -12,30 +12,6 @@
       <main class="content-grid">
         <section class="work-columns" aria-label="Top stories">
 
-          @if (config('app.digest_testing'))
-            <article class="category-column">
-              <h2 class="section-label">Digests</h2>
-              <div class="project-list">
-                @foreach ($digests as $post)
-                  <a class="project-card" href="{{ route('posts.show', $post) }}" aria-label="{{ $post->title }}">
-                    <div class="project-media-wrap">
-                      <img
-                        class="project-media"
-                        src="{{ $post->thumbnail() ? $post->thumbnail()->url : asset('images/empty.png') }}"
-                        alt="{{ $post->title }}"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div class="project-body">
-                      <h3 class="project-title">{{ Str::limit($post->title, 75, '...') }}</h3>
-                      <p class="project-meta">{{ $post->published_at->diffForHumans() }}</p>
-                    </div>
-                  </a>
-                @endforeach
-              </div>
-            </article>
-          @endif
-
           {{-- Column 1: top tag --}}
           <article class="category-column">
             <h2 class="section-label">{{ $col1Tag?->name ?? 'Latest News' }}</h2>
@@ -123,5 +99,33 @@
           {{ $page->show('hero:all-news-cta') }} &rsaquo;
         </a>
       </div>
+
+      @if (config('app.digest_testing'))
+        <div class="content-grid" style="border: 1px solid red; padding: 20px; margin-top: 20px;">
+          <section class="work-columns" aria-label="Top stories">
+              <article class="category-column">
+                <h2 class="section-label">Digests</h2>
+                <div class="project-list">
+                  @foreach ($digests as $post)
+                    <a class="project-card" href="{{ route('posts.show', $post) }}" aria-label="{{ $post->title }}">
+                      <div class="project-media-wrap">
+                        <img
+                          class="project-media"
+                          src="{{ $post->thumbnail() ? $post->thumbnail()->url : asset('images/empty.png') }}"
+                          alt="{{ $post->title }}"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="project-body">
+                        <h3 class="project-title">{{ Str::limit($post->title, 75, '...') }}</h3>
+                        <p class="project-meta">{{ $post->published_at->diffForHumans() }}</p>
+                      </div>
+                    </a>
+                  @endforeach
+                </div>
+              </article>
+          </section>
+        </div>
+      @endif
     </div>
 @endsection

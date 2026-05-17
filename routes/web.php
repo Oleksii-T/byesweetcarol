@@ -64,6 +64,6 @@ Route::get('{author}', [AuthorController::class, 'show'])->name('authors.show')-
 
 // Route::get('{tag}', [TagController::class, 'show'])->name('tags.show')->where('tag', \App\Models\Tag::getAllSlugs());
 
-// Route::get('{game}', [GameController::class, 'show'])->name('games.show')->where('game', \App\Models\Game::getAllSlugs());
+Route::get('{game}', [GameController::class, 'show'])->name('games.show')->where('game', \App\Models\Game::getAllSlugs());
 
 Route::get('{post:slug}', [PostController::class, 'show'])->name('posts.show');

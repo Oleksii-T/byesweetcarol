@@ -61,6 +61,23 @@
                     <span class="post-byline__date">{{ $post->published_at?->format('M d, Y') }}</span>
                 </div>
 
+                @if ($game)
+                    <a class="post-game-card" href="{{ route('games.show', $game) }}">
+                        @php $gameThumb = $game->thumbnail(); @endphp
+                        <span class="post-game-card__thumb">
+                            <img
+                                src="{{ $gameThumb ? $gameThumb->url : asset('images/empty.png') }}"
+                                alt="{{ $gameThumb?->alt ?: $game->name }}"
+                                loading="lazy"
+                            />
+                        </span>
+                        <span class="post-game-card__body">
+                            <span class="post-game-card__label">Game page</span>
+                            <span class="post-game-card__title">{{ $game->name }}</span>
+                        </span>
+                    </a>
+                @endif
+
                 {{-- Content blocks --}}
                 <div class="post-content">
                     @foreach ($blockGroups as $blocks)

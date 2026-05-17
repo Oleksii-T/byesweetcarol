@@ -2,17 +2,14 @@
 <html lang="en" dir="ltr">
 
 <head>
-    @if (!isset($page))
-        dd(request());
-    @endif
-    <title>@yield('title', $page?->meta_title)</title>
+    <title>@yield('title', isset($page) ? $page->meta_title : '')</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
     <meta property="og:image" content="@yield('meta-image', asset('images/og-image.png'))">
-    <meta property="og:title" content="@yield('title', $page?->meta_title)">
-    <meta property="og:description" content="@yield('description', $page?->meta_description)">
-    <meta name="description" content="@yield('description', $page?->meta_description)">
+    <meta property="og:title" content="@yield('title', isset($page) ? $page->meta_title : '')">
+    <meta property="og:description" content="@yield('description', isset($page) ? $page->meta_description : '')">
+    <meta name="description" content="@yield('description', isset($page) ? $page->meta_description : '')">
     <meta name="robots" content="@yield('meta-robots', 'index, follow, max-image-preview:large')">
     <meta property="og:url" content="https://www.byesweetcarol.com{{request()->getRequestUri()}}">
     <meta property="og:site_name" content="RCGameClub">

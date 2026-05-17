@@ -75,7 +75,7 @@ class Game extends Model
     public function thumbnail()
     {
         if (! $this->thumbnail) {
-            $this->thumbnail = $this->morphToMany(Attachment::class, 'attachmentable')->where('group', 'thumbnail')->first();
+            $this->thumbnail = $this->morphToMany(Attachment::class, 'attachmentable')->where('attachmentables.group', 'thumbnail')->first();
         }
 
         return $this->thumbnail;
@@ -84,7 +84,7 @@ class Game extends Model
     public function esbr_image()
     {
         if (! $this->esbr_image) {
-            $this->esbr_image = $this->morphToMany(Attachment::class, 'attachmentable')->where('group', 'esbr_image')->first();
+            $this->esbr_image = $this->morphToMany(Attachment::class, 'attachmentable')->where('attachmentables.group', 'esbr_image')->first();
         }
 
         return $this->esbr_image;
@@ -92,7 +92,7 @@ class Game extends Model
 
     public function screenshots()
     {
-        return $this->morphToMany(Attachment::class, 'attachmentable')->where('group', 'screenshots');
+        return $this->morphToMany(Attachment::class, 'attachmentable')->where('attachmentables.group', 'screenshots');
     }
 
     public function posts()
