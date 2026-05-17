@@ -123,7 +123,7 @@ class Game extends Model
     {
         $game = self::create([
             'name' => $gameName,
-            'status' => GameStatus::DRAFT,
+            'status' => GameStatus::PUBLISHED,
             'meta_title' => $gameName,
             'meta_description' => $gameName,
             'developer' => '',
