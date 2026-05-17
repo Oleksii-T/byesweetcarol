@@ -21,7 +21,7 @@ class PageController extends Controller
         $authors = Author::get();
         $newsCategory = Category::where('slug', 'news')->firstOrFail();
 
-        $digests = Post::publised()->latest('published_at')->whereRelation('category', 'slug', 'digests');
+        $digests = Post::publised()->latest('published_at')->whereRelation('category', 'slug', 'digests')->get();
 
         // Pick top 2 tags by post count (news category only)
         $topNewsTags = GetTopTagsAction::run();
