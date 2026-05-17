@@ -128,6 +128,7 @@ class Game extends Model
             'meta_description' => $gameName,
             'developer' => '',
             'ganres' => '',
+            'esbr' => '',
             'slug' => makeSlug($gameName, self::pluck('slug')->toArray()),
             'hours' => [],
             'description' => '',
