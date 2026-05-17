@@ -43,7 +43,7 @@ class PostCreateRequest extends FormRequest
             // 'status' => ['required', Rule::in(PostStatus::values())],
             // 'tc_style' => ['required', Rule::in(PostTCStyle::values())],
             'category' => ['nullable', 'exists:categories,slug'],
-            // 'game_id' => ['nullable'],
+            'game_id' => ['nullable'],
             // 'author_id' => ['required', 'exists:authors,id'],
             'tags' => ['nullable', 'string'],
             'source' => ['nullable', 'string'],
