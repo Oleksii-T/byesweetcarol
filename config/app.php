@@ -209,4 +209,14 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom flag
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'digest_testing' => env('DIGESTS_TESTING', false)
 ];

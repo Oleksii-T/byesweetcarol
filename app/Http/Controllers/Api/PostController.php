@@ -25,6 +25,7 @@ class PostController extends Controller
         $data = $this->normalizeExternalData($data);
         $toPublish = $data['publish'] ?? false;
         $useAuthor = $data['author'] ?? 'random';
+        $categorySlug = $data['category'] ?? 'news';
 
         // add data which is mission in n8n to simulate a generatl post create
         if ($toPublish) {
@@ -44,7 +45,7 @@ class PostController extends Controller
 
         $data['tc_style'] = PostTCStyle::R_SIDEBAR;
         $data['slug'] = makeSlug($data['title'], Post::pluck('slug')->toArray());
-        $data['category_id'] = Category::where('slug', 'news')->value('id');
+        $data['category_id'] = Category::where('slug', $categorySlug)->value('id');
         $blocks = $this->makeBlocks($data['blocks'] ?? $data['body']);
 
         $post = \DB::transaction(function () use ($data, $blocks) {

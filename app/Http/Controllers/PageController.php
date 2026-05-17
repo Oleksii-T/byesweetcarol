@@ -21,6 +21,8 @@ class PageController extends Controller
         $authors = Author::get();
         $newsCategory = Category::where('slug', 'news')->firstOrFail();
 
+        $digests = Post::publised()->latest('published_at')->whereRelation('category', 'slug', 'digests');
+
         // Pick top 2 tags by post count (news category only)
         $topNewsTags = GetTopTagsAction::run();
 
@@ -41,7 +43,7 @@ class PageController extends Controller
         $shownIds = $col1Posts->merge($col2Posts)->pluck('id');
         $col3Posts = (clone $newsQ)->whereNotIn('id', $shownIds)->limit(3)->get();
 
-        return view('index', compact('page', 'authors', 'newsCategory', 'col1Tag', 'col2Tag', 'col1Posts', 'col2Posts', 'col3Posts'));
+        return view('index', compact('page', 'authors', 'newsCategory', 'col1Tag', 'col2Tag', 'col1Posts', 'col2Posts', 'col3Posts', 'digests'));
     }
 
     public function show(Request $request)
