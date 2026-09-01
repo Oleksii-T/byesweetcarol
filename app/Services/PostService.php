@@ -13,6 +13,8 @@ use App\Models\Post;
 use App\Models\Prompt;
 use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PostService
 {
@@ -192,6 +194,36 @@ class PostService
 
         $postText = strtr($postText, $youtubeEmbeds);
 
+        $postText = preg_replace_callback(
+            '~<a\b[^>]*>.*?</a>~is',
+            function (array $matches): string {
+                $postUrl = $this->findXPostUrl($matches[0]);
+
+                if ($postUrl === null) {
+                    return $matches[0];
+                }
+
+                return $this->xPostEmbed($postUrl);
+            },
+            $postText
+        );
+
+        $postText = preg_replace_callback(
+            '~(?<!["\'=])(https?://(?:www\.)?(?:x|twitter)\.com/[A-Za-z0-9_]+/status/\d+(?:[/?#][^\s<>"\'\[\]()]+)?)~i',
+            function (array $matches): string {
+                $url = rtrim($matches[1], '.,!?;:');
+                $trailingPunctuation = substr($matches[1], strlen($url));
+                $postUrl = $this->normalizeXPostUrl($url);
+
+                if ($postUrl === null) {
+                    return $matches[0];
+                }
+
+                return $this->xPostEmbed($postUrl).$trailingPunctuation;
+            },
+            $postText
+        );
+
         preg_match_all(
             '~https://t\.co/[A-Za-z0-9]+~i',
             $postText,
@@ -207,12 +239,7 @@ class PostService
                 continue;
             }
 
-            $blockquote = sprintf(
-                '<blockquote class="twitter-tweet"><a href="%s"></a></blockquote>',
-                htmlspecialchars($postUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
-            );
-
-            $postText = str_replace($shortUrl, $blockquote, $postText);
+            $postText = str_replace($shortUrl, $this->xPostEmbed($postUrl), $postText);
         }
 
         return $postText;
@@ -261,6 +288,27 @@ class PostService
             '<iframe src="https://www.youtube-nocookie.com/embed/%s" title="YouTube video player" loading="lazy" style="width: 100%%; aspect-ratio: 16 / 9; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
             $videoId
         );
+    }
+
+    private function xPostEmbed(string $postUrl): string
+    {
+        return sprintf(
+            '<blockquote class="twitter-tweet"><a href="%s"></a></blockquote>',
+            htmlspecialchars($postUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+        );
+    }
+
+    private function findXPostUrl(string $text): ?string
+    {
+        if (! preg_match(
+            '~https?://(?:www\.)?(?:x|twitter)\.com/[A-Za-z0-9_]+/status/\d+(?:[/?#][^\s<>"\'\[\]()]+)?~i',
+            html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            $matches
+        )) {
+            return null;
+        }
+
+        return $this->normalizeXPostUrl(rtrim($matches[0], '.,!?;:'));
     }
 
     private function resolveXPostUrl(string $shortUrl): ?string
