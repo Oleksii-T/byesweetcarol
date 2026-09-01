@@ -124,3 +124,7 @@
         </div>
     </div>
 @endsection
+
+@section('scripts')
+    <script async src="https://platform.twitter.com/widgets.js"></script>
+@endsection
