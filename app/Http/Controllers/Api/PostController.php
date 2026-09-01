@@ -125,7 +125,7 @@ class PostController extends Controller
             $blocksRaw = [
                 [
                     'title' => 'block1',
-                    'body' => $data,
+                    'body' => $this->service->parseBlockHtml($data),
                 ],
             ];
         }
@@ -145,7 +145,7 @@ class PostController extends Controller
                         'type' => 'text',
                         'order' => 1,
                         'value' => [
-                            'value' => $blockRaw['body'],
+                            'value' => $this->service->parseBlockHtml($blockRaw['body']),
                         ],
                     ],
                 ],

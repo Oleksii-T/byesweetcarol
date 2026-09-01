@@ -153,6 +153,185 @@ class PostService
         }
     }
 
+    public function parseBlockHtml(string $postText): string
+    {
+        $youtubeEmbeds = [];
+
+        $postText = preg_replace_callback(
+            '~\[[^\]\r\n]*\]\(\s*(https?://[^\s)]+)\s*\)~i',
+            function (array $matches) use (&$youtubeEmbeds): string {
+                $videoId = $this->youtubeVideoId($matches[1]);
+
+                if ($videoId === null) {
+                    return $matches[0];
+                }
+
+                $placeholder = '___YOUTUBE_EMBED_'.count($youtubeEmbeds).'___';
+                $youtubeEmbeds[$placeholder] = $this->youtubeEmbed($videoId);
+
+                return $placeholder;
+            },
+            $postText
+        );
+
+        $postText = preg_replace_callback(
+            '~(?<!["\'=])(https?://(?:(?:(?:www|m|music)\.)?youtube\.com|(?:www\.)?youtube-nocookie\.com|(?:www\.)?youtu\.be)/[^\s<>\[\]()]+)~i',
+            function (array $matches): string {
+                $url = rtrim($matches[1], '.,!?;:');
+                $trailingPunctuation = substr($matches[1], strlen($url));
+                $videoId = $this->youtubeVideoId($url);
+
+                if ($videoId === null) {
+                    return $matches[0];
+                }
+
+                return $this->youtubeEmbed($videoId).$trailingPunctuation;
+            },
+            $postText
+        );
+
+        $postText = strtr($postText, $youtubeEmbeds);
+
+        preg_match_all(
+            '~https://t\.co/[A-Za-z0-9]+~i',
+            $postText,
+            $matches
+        );
+
+        $shortUrls = array_unique($matches[0]);
+
+        foreach ($shortUrls as $shortUrl) {
+            $postUrl = $this->resolveXPostUrl($shortUrl);
+
+            if ($postUrl === null) {
+                continue;
+            }
+
+            $blockquote = sprintf(
+                '<blockquote class="twitter-tweet"><a href="%s"></a></blockquote>',
+                htmlspecialchars($postUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+            );
+
+            $postText = str_replace($shortUrl, $blockquote, $postText);
+        }
+
+        return $postText;
+    }
+
+    private function youtubeVideoId(string $url): ?string
+    {
+        $parts = parse_url(html_entity_decode($url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+        if ($parts === false) {
+            return null;
+        }
+
+        $host = strtolower($parts['host'] ?? '');
+        $path = trim($parts['path'] ?? '', '/');
+        $videoId = null;
+
+        if (in_array($host, ['youtu.be', 'www.youtu.be'], true)) {
+            $videoId = explode('/', $path)[0] ?? null;
+        } elseif (in_array($host, [
+            'youtube.com',
+            'www.youtube.com',
+            'm.youtube.com',
+            'music.youtube.com',
+            'youtube-nocookie.com',
+            'www.youtube-nocookie.com',
+        ], true)) {
+            if ($path === 'watch') {
+                parse_str($parts['query'] ?? '', $query);
+                $videoId = $query['v'] ?? null;
+            } elseif (preg_match('~^(?:embed|shorts|live|v)/([^/]+)~', $path, $matches)) {
+                $videoId = $matches[1];
+            }
+        }
+
+        if (! is_string($videoId) || ! preg_match('~^([A-Za-z0-9_-]{11})~', $videoId, $matches)) {
+            return null;
+        }
+
+        return $matches[1];
+    }
+
+    private function youtubeEmbed(string $videoId): string
+    {
+        return sprintf(
+            '<iframe src="https://www.youtube-nocookie.com/embed/%s" title="YouTube video player" loading="lazy" style="width: 100%%; aspect-ratio: 16 / 9; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
+            $videoId
+        );
+    }
+
+    private function resolveXPostUrl(string $shortUrl): ?string
+    {
+        try {
+            $response = Http::timeout(10)
+                ->connectTimeout(5)
+                ->withOptions([
+                    'allow_redirects' => [
+                        'max' => 5,
+                        'strict' => true,
+                        'referer' => false,
+                        'track_redirects' => true,
+                    ],
+
+                    // Avoid downloading a potentially large destination response.
+                    'stream' => true,
+                ])
+                ->get($shortUrl);
+
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $finalUrl = (string) $response->effectiveUri();
+
+            return $this->normalizeXPostUrl($finalUrl);
+        } catch (\Throwable $exception) {
+            Log::warning('Could not resolve X short URL.', [
+                'url' => $shortUrl,
+                'message' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
+    }
+
+    private function normalizeXPostUrl(string $url): ?string
+    {
+        $parts = parse_url($url);
+
+        if ($parts === false) {
+            return null;
+        }
+
+        $host = strtolower($parts['host'] ?? '');
+        $path = $parts['path'] ?? '';
+
+        if (! in_array($host, [
+            'x.com',
+            'www.x.com',
+            'twitter.com',
+            'www.twitter.com',
+        ], true)) {
+            return null;
+        }
+
+        if (! preg_match(
+            '~^/([A-Za-z0-9_]+)/status/(\d+)/?$~',
+            $path,
+            $matches
+        )) {
+            return null;
+        }
+
+        $username = $matches[1];
+        $postId = $matches[2];
+
+        return "https://x.com/{$username}/status/{$postId}";
+    }
+
     private function bindPrompt(string $prompt, array $data): string
     {
         $bindedPrompt = $prompt;
