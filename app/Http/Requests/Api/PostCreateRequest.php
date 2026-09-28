@@ -50,7 +50,7 @@ class PostCreateRequest extends FormRequest
             'source' => ['nullable', 'string', 'max:255', Rule::unique('post_infos', 'source')],
             'publish' => ['nullable', 'boolean'],
             'author' => ['nullable', 'string'],
-            'external_data' => ['nullable', 'json'],
+            'external_data' => ['nullable', 'array'],
         ];
     }
 
@@ -58,13 +58,11 @@ class PostCreateRequest extends FormRequest
     {
         $externalData = $this->input('external_data');
 
-        if (! is_string($externalData)) {
+        if (! is_array($externalData)) {
             return;
         }
 
-        $externalData = json_decode($externalData, true);
-
-        if (is_array($externalData) && array_key_exists('source', $externalData)) {
+        if (array_key_exists('source', $externalData)) {
             $this->merge(['source' => $externalData['source']]);
         }
     }

@@ -56,7 +56,7 @@ class PostCreateRequestTest extends TestCase
             'meta_title' => 'Test post',
             'meta_description' => 'Test post description',
             'body' => 'Test body',
-            'external_data' => json_encode(['source' => $source]),
+            'external_data' => ['source' => $source],
         ]);
 
         return $request->setContainer($this->app);
