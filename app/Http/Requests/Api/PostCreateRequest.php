@@ -6,6 +6,7 @@ use App\Rules\NotRussian;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class PostCreateRequest extends FormRequest
 {
@@ -46,11 +47,26 @@ class PostCreateRequest extends FormRequest
             'game_id' => ['nullable'],
             // 'author_id' => ['required', 'exists:authors,id'],
             'tags' => ['nullable', 'string'],
-            'source' => ['nullable', 'string'],
+            'source' => ['nullable', 'string', 'max:255', Rule::unique('post_infos', 'source')],
             'publish' => ['nullable', 'boolean'],
             'author' => ['nullable', 'string'],
             'external_data' => ['nullable', 'json'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $externalData = $this->input('external_data');
+
+        if (! is_string($externalData)) {
+            return;
+        }
+
+        $externalData = json_decode($externalData, true);
+
+        if (is_array($externalData) && array_key_exists('source', $externalData)) {
+            $this->merge(['source' => $externalData['source']]);
+        }
     }
 
     /**
