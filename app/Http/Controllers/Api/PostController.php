@@ -23,6 +23,7 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $data = $this->normalizeExternalData($data);
+        unset($data['external_data']);
         $toPublish = $data['publish'] ?? false;
         $useAuthor = $data['author'] ?? 'random';
         $categorySlug = $data['category'] ?? 'news';
